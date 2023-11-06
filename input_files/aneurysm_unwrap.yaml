@@ -1,0 +1,68 @@
+#################################################
+#
+#   Input file
+#
+#################################################
+
+io: 
+  # path to folder where to save results
+  savepath: 'results/aneurysm/slice_unwrapped/SNR12_V120_30/'
+  write_checkpoints: False
+  write_xdmf: True
+  # number of different noise realizations per input file; has to be the same for all input files; set to 0 or remove if only 1
+  realizations: 10
+  init_seed: 100 # initial seed for the realizations (corresponding to the first in_file below)
+  init_seed2: 20100 # initial seed for the realizations (corresponding to the second in_file below)
+  seed_increase: 112 # increase in seed number per iteration
+
+mesh:
+  mesh_file: 'meshes/aneurysm_slice.xdmf'
+  mesh_type: 'slice'
+
+input:
+  - in_file: 'results/aneurysm/slice/SNR12V120/'
+    VENC: 0.72
+  # - in_file: 'results/aneurysm/slice/SNR12V60/'
+  #   VENC: 0.36
+  - in_file: 'results/aneurysm/slice/SNR12V30/'
+    VENC: 0.18
+  
+dt: 0.03
+minimum_dt: 0.03
+
+multi_venc_unwrapping:
+  omme:
+    #uses omme with all input files
+    apply: True
+    path_addon: 'omme/'
+
+  lee:
+    #uses first two input files
+    apply: False
+    path_addon: 'lee/'
+  
+  omme_wavelet:
+    #removes noise artifacts from OMME result (requires omme apply true)
+    apply: True
+    path_addon: 'ODV_wavelet/'
+
+  omme_tempdiff:
+    #removes noise artifacts from OMME result (requires omme apply true)
+    apply: True
+    path_addon: 'ODV_tempdiff/'
+
+  omme_correction:
+    #removes noise artifacts from OMME result (requires omme apply true)
+    apply: True
+    threshold: 0.072
+    path_addon: 'ODV_correction_th/' 
+
+eval:
+  apply: True
+  omme_as_groundtruth: False
+  groundtruth_file: 'results/aneurysm/slice/GroundTruth/'
+  ts: 4
+  method: 'error'
+  lumen: True
+  save_errors: True
+  save_all_errors: True #only matters for several realizations

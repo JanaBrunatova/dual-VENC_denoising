@@ -1,0 +1,39 @@
+#################################################
+#
+#   Input file for the gen_measurements script
+#
+#################################################
+
+in_file: 'CFD_results/aneurysm/'
+mesh_in: 'meshes/aneurysm_CFD_mesh.h5'
+write_path: 'results/aneurysm/slice/SNR12V120/'
+mode: 'checkpoint' # is the data saved in checkpoint form or measurement form?
+save_xdmf: True
+save_h5: True
+bubble: True
+scalar: False # is the data vector-valued or scalar-valued?
+
+artifacts:
+
+  realizations:
+    apply: True
+    total_number: 10 #putting True and 0 will still generate one realization
+    seed_init: 100
+    seed_increase: 4
+
+  temporal_undersampling: 1 # rate of the undersampling, pick every n-th timestep
+
+  space_interpolation:
+    apply: True
+    mesh_out: 'meshes/aneurysm_slice.xdmf'
+    #velocity component to interpolate. If not set, uses full vector. This setting is ignored if the input data is scalar
+    velocity_direction: [1, 0, 0]
+
+  magnetization:
+    # put either venc or phase_contrast
+    venc: 0.72             # cm/s (or whatever unit the input data is in)
+    # phase_contrast: 100  # % of maximum velocity AFTER interpolating/undersampling
+    SNR: 12               # put SNR or 'inf' for no noise (or remove for also no noise)
+    lumen: False
+    seed:  100          # optional. Random if not set. Ignored if realizations apply=True or if SNR='inf'.
+    save_module: False

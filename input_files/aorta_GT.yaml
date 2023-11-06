@@ -1,0 +1,40 @@
+#################################################
+#
+#   Input file for the gen_measurements script
+#
+#################################################
+
+in_file: 'CFD_results/aorta/measurement/'
+mesh_in: 'meshes/boxmeshH1.h5'
+write_path: 'results/aorta/slice_5.7/GroundTruth/'
+# write_path: 'results/aorta/slice_2.7/GroundTruth/'
+# write_path: 'results/aorta/BOXmesh/GroundTruth/'
+mode: 'measurement' # is the data saved in checkpoint form or measurement form?
+save_xdmf: True
+save_h5: True
+scalar: True # is the data vector-valued or scalar-valued?
+
+artifacts:
+
+  realizations:
+    apply: False
+    total_number: 10 #putting True and 0 will still generate one realization
+    seed_init: 100
+    seed_increase: 4
+
+  temporal_undersampling: 2 # rate of the undersampling, pick every n-th timestep
+
+  space_interpolation:
+    apply: True
+    mesh_out: 'meshes/aorta_slice_5.7.xdmf'
+    # mesh_out: 'meshes/aorta_slice_2.7.xdmf'
+    # mesh_out: 'meshes/aorta_BOXmesh.xdmf'
+
+  magnetization:
+    # put either venc or phase_contrast
+    # venc: 154             # cm/s (or whatever unit the input data is in)
+    phase_contrast: 100  # % of maximum velocity AFTER interpolating/undersampling
+    SNR: 'inf'               # put SNR or 'inf' for no noise (or remove for also no noise)
+    lumen: False
+    seed:  100          # optional. Random if not set. Ignored if realizations apply=True or if SNR='inf'.
+    save_module: False
