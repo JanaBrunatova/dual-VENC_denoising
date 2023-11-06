@@ -1,9 +1,10 @@
-This repository contain scripts and data necessary to reproduce synthetic data from the paper _Denoising of dual-VENC PC-MRI with large high/low VENC ratios_
+This repository contain scripts and necessary files to reproduce synthetic data from the paper
+**_Denoising of dual-VENC PC-MRI with large high/low VENC ratios_**
 
 ### Dependencies and packages
 The code is written in Python3 and requires the following:
 - FEniCS 2019.1.0 (see [here](https://fenicsproject.org/download/archive/))
-- PyWavelets (see [here]([https://pypi.org/project/PyWavelets/](https://github.com/PyWavelets/pywt))); we used version 1.4.1
+- PyWavelets (see [here](https://github.com/PyWavelets/pywt)); we used version 1.4.1
 - ruamel.yaml (see [here](https://pypi.org/project/ruamel.yaml/)); we used version 0.17.32
 
 ### Generate measurements
@@ -45,6 +46,6 @@ The high-VENC was set to approx. 120% of the velocity inside each domain:
 - 72 cm/s (plane, aneurysm).
 
 Initial seeds were the following:
-- 100 for $V_\text{H} = $120%,
-- 10100 for $V_\text{L} = $60%,
-- 20100 for $V_\text{L} = $30%.
+- 100 for $V_\text{H}$ = 120%,
+- 10100 for $V_\text{L}$ = 60%,
+- 20100 for $V_\text{L}$ = 30%.
