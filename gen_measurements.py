@@ -108,54 +108,14 @@ def read_mesh(mesh_file):
 
     if file_type == 'xml':
         mesh = Mesh(mesh_file)
-        try:
-            subdomains = MeshFunction('size_t', mesh,
-                                      mesh_pref + '_physical_region.xml')
-        except RuntimeError:
-            subdomains = MeshFunction('int', mesh,
-                                      mesh_pref + '_physical_region.xml')
-        except FileNotFoundError:
-            subdomains = MeshFunction('size_t', mesh,
-                                      mesh.topology().dim())
-
-        try:
-            boundaries = MeshFunction('size_t', mesh,
-                                      # mesh.topology().dim() - 1,
-                                      mesh_pref + '_facet_region.xml')
-        except RuntimeError:
-            boundaries = MeshFunction('int', mesh,
-                                      # mesh.topology().dim() - 1,
-                                      mesh_pref + '_facet_region.xml')
-        except FileNotFoundError:
-            if mesh.mpi_comm().Get_rank() == 0:
-                print('no boundary file found ({})'.format(
-                    mesh_pref+'_facet_region.xml'))
-            boundaries = MeshFunction('size_t', mesh,
-                                      mesh.topology().dim() - 1)
 
     elif file_type == 'h5':
         mesh = Mesh()
-
         with HDF5File(mesh.mpi_comm(), mesh_file, 'r') as hdf:
             hdf.read(mesh, '/mesh', False)
-            subdomains = MeshFunction('size_t', mesh, mesh.topology().dim())
-            boundaries = MeshFunction('size_t', mesh, mesh.topology().dim()
-                                      - 1)
-
-            if hdf.has_dataset('subdomains'):
-                hdf.read(subdomains, '/subdomains')
-
-            if hdf.has_dataset('boundaries'):
-                hdf.read(boundaries, '/boundaries')
-            else:
-                if mesh.mpi_comm().Get_rank() == 0:
-                    print('no <boundaries> datasets found in file {}'.format(
-                        mesh_file))
 
     elif file_type == 'xdmf':
-
         mesh = Mesh()
-
         with XDMFFile(mesh_file) as xf:
             xf.read(mesh)
 
@@ -163,10 +123,10 @@ def read_mesh(mesh_file):
         raise Exception('Mesh format not recognized. Try XDMF or HDF5 (or XML,'
                         ' deprecated)')
 
-    return mesh, subdomains, boundaries
+    return mesh
 
 def ROUTINE(options):
-    mesh, _, _ = read_mesh(options['mesh_in'])
+    mesh = read_mesh(options['mesh_in'])
     V, P = create_functionspaces(options, mesh)
     
     #read data according to measurement or checkpoint mode 
@@ -217,7 +177,7 @@ def ROUTINE(options):
         spoptions = artifacts['space_interpolation']
 
         #find degree and element for function space
-        mesh_out, _, _ = read_mesh(spoptions['mesh_out'])
+        mesh_out = read_mesh(spoptions['mesh_out'])
         if mesh_out.ufl_cell() == tetrahedron:
             element = 'P'
             degree = 1
