@@ -1,6 +1,10 @@
 This repository contain scripts and necessary files to reproduce synthetic data from the paper
 **_Denoising of dual-VENC PC-MRI with large high/low VENC ratios_**
 
+The dual-VENC unwrapping methods are adopted from a package by Miriam Löcke [1]; which can be found [here](https://git.web.rug.nl/p305235/Phase_Unwrapping_Comparison).
+
+[1] Löcke M, Garay Labra JE,Franco P, Uribe S, Bertoglio C. A comparison of phase unwrapping methods in velocity-encoded MRI for aortic flows. Magn Reson Med.2023;90:2102-2115. doi: [10.1002/mrm.29767](https://onlinelibrary.wiley.com/doi/full/10.1002/mrm.29767)
+
 ### Dependencies and packages
 The code is written in Python3 and requires the following:
 - FEniCS 2019.1.0 (see [here](https://fenicsproject.org/download/archive/))
